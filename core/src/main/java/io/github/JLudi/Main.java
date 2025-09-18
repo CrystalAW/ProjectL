@@ -2,8 +2,10 @@ package io.github.JLudi;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -11,8 +13,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
+    private Sprite playerSprite;
     private Texture image;
     private Texture player;
+    private Texture background;
     private FitViewport viewport;
 
     @Override
@@ -20,6 +24,9 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         image = new Texture("ludi.jpeg"); //
         player = new Texture("coin.jpg");
+        background = new Texture("gamebkgnd.jpg");
+        playerSprite = new Sprite(player);
+        playerSprite.setSize(1,1);
         viewport = new FitViewport(8, 5);
     }
 
@@ -37,8 +44,22 @@ public class Main extends ApplicationAdapter {
     }
 
     private void input() {
+        float speed = 4f;
+        // delta time: measured time between frames
+        float delta = Gdx.graphics.getDeltaTime(); // getting current delta
 
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            playerSprite.translateX(speed * delta); // move coin right
+        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            playerSprite.translateX(-speed * delta); // move to the left
+        } 
+        // NEXT :: adding the up and down movements later
+        // else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        //     playerSprite.translateX((speed *speed) * delta);
+        // }
     }
+
+
     private void logic() {
 
     }
@@ -48,9 +69,11 @@ public class Main extends ApplicationAdapter {
         viewport.apply();
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
+        float worldWidth = viewport.getWorldWidth();
+        float worldHeight = viewport.getWorldHeight();
         // any tupe of drawing logic should be sandwiched between a being and end line.
-        batch.draw(player, 0, 0, 1, 1); // drawing the coin by 1m
-
+        batch.draw(background, 0,0, worldWidth, worldHeight); // needs to be placed in order that it will be rendered.
+        playerSprite.draw(batch); // sprites have their own draw method
         batch.end();
     }
 
