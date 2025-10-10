@@ -3,10 +3,13 @@ package io.github.JLudi;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -18,6 +21,8 @@ public class Main extends ApplicationAdapter {
     private Texture player;
     private Texture background;
     private FitViewport viewport;
+    private Sound dropSound;
+    private Music music;
 
     @Override
     public void create() {
@@ -28,6 +33,9 @@ public class Main extends ApplicationAdapter {
         playerSprite = new Sprite(player);
         playerSprite.setSize(1,1);
         viewport = new FitViewport(8, 5);
+        // for playing music & sounds; need to implement the AssetManager next
+        // dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
+        // music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
     }
 
     @Override
@@ -61,7 +69,15 @@ public class Main extends ApplicationAdapter {
 
 
     private void logic() {
+        float worldWidth = viewport.getWorldWidth();
+        float worldHeight = viewport.getWorldHeight();
 
+
+        float playerWidth = playerSprite.getWidth();
+        float playerHeight = playerSprite.getHeight();
+
+        // keeps the player from going off screen
+        playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, worldWidth - playerWidth));
     }
 
     private void draw() {
