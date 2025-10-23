@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -23,6 +25,8 @@ public class Main extends ApplicationAdapter {
     private FitViewport viewport;
     private Sound dropSound;
     private Music music;
+    private Vector2 touchPos; // our little math project
+    private Array<Sprite> playerTeam; // team for each player
 
     @Override
     public void create() {
@@ -36,6 +40,8 @@ public class Main extends ApplicationAdapter {
         // for playing music & sounds; need to implement the AssetManager next
         // dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
         // music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+        touchPos = new Vector2();
+        playerTeam = new Array<>(); //initialize playerTeam
     }
 
     @Override
@@ -65,6 +71,11 @@ public class Main extends ApplicationAdapter {
         // else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
         //     playerSprite.translateX((speed *speed) * delta);
         // }
+        if (Gdx.input.isTouched()) { // if screen is tapped/clicked
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY()); // get where the touch happened on screen
+            viewport.unproject(touchPos); // convert the units to the world units of the viewport
+            playerSprite.setCenterX(touchPos.x); // Change the horizontally centered position of the bucket
+        }
     }
 
 
